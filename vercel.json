@@ -12,5 +12,10 @@
       "dest": "index.js"
     }
   ],
-  "installCommand": "npm install pg"
+  "installCommand": "npm install pg",
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  }
 }
