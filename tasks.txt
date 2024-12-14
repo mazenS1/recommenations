@@ -1,0 +1,2 @@
+fix genre not saving in the db
+implement getting rated moves for user
