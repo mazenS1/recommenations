@@ -9,7 +9,9 @@
     "server": "nodemon --ignore client/ index.js",
     "client": "cd client && npm run dev",
     "dev": "npm-run-all --parallel server client",
-    "vercel-build": "npm install pg && cd client && npm install && npm run build"
+    "vercel-build": "npm install && npm run build:server && npm run build:client",
+    "build:server": "npm install pg",
+    "build:client": "cd client && npm install && npm run build"
   },
   "keywords": [],
   "author": "",

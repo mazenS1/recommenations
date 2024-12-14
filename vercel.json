@@ -4,15 +4,25 @@
     {
       "src": "index.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/api/(.*)",
       "dest": "index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "client/dist/$1"
     }
   ],
-  "installCommand": "npm install pg",
   "build": {
     "env": {
       "NODE_ENV": "production"
