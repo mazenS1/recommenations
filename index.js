@@ -25,7 +25,7 @@ app.use(helmet());
 app.use(cors({
     origin: process.env.NODE_ENV === 'development' 
         ? ['http://localhost:5173', 'http://127.0.0.1:5173']
-        : ['https://recommendations-nodjs.vercel.app'],
+        : ['https://newish.vercel.app'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
