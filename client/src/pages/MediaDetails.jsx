@@ -137,11 +137,10 @@ export const MediaDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Backdrop - positioned to extend under navbar */}
+    <div className="min-h-screen bg-background">
       {media.backdrop_path && (
-        <div className="relative h-[400px] ">
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/30 to-transparent z-10" />
+        <div className="relative h-[400px]">
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent z-10" />
           <img
             src={`https://image.tmdb.org/t/p/original${media.backdrop_path}`}
             alt={media.title}
@@ -149,27 +148,20 @@ export const MediaDetails = () => {
           />
         </div>
       )}
-
-      {/* Content - adjusted padding and margin for proper positioning */}
       <div className="max-w-7xl mx-auto px-4 py-8 -mt-80 relative z-20 pt-16">
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Poster */}
           <div className="w-64 flex-shrink-0">
             <img
               src={`https://image.tmdb.org/t/p/w500${media.poster_path}`}
               alt={media.title}
-              className="w-full rounded-lg shadow-xl border-1 border-gray-800"
+              className="w-full rounded-lg shadow-xl border border-border"
             />
           </div>
-
-          {/* Details */}
           <div className="flex-1">
-            <h1 className="text-4xl font-bold text-white mb-4">
+            <h1 className="text-4xl font-bold text-foreground mb-4">
               {media.title}
             </h1>
-
-            {/* Meta information */}
-            <div className="flex flex-wrap gap-4 text-gray-300 mb-6">
+            <div className="flex flex-wrap gap-4 text-primary/60 mb-6">
               {media.release_date && (
                 <div className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
@@ -196,25 +188,18 @@ export const MediaDetails = () => {
                 <span>{media.vote_average.toFixed(1)}</span>
               </div>
             </div>
-
-            {/* Genres */}
             <div className="flex flex-wrap gap-2 mb-6">
               {media.genres.map((genre) => (
                 <span
                   key={genre.id}
-                  className="px-3 py-1 bg-indigo-600 text-white rounded-full text-sm"
+                  className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm"
                 >
                   {genre.name}
                 </span>
               ))}
             </div>
-
-            {/* Overview */}
-            <p className="text-gray-200 mb-6">{media.overview}</p>
-
-            {/* Credits */}
+            <p className="text-foreground mb-6">{media.overview}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Cast */}
               <div>
                 <h3 className="text-xl font-semibold text-white mb-3">Cast</h3>
                 <div className="space-y-2">
@@ -225,8 +210,6 @@ export const MediaDetails = () => {
                   ))}
                 </div>
               </div>
-
-              {/* Crew */}
               <div>
                 <h3 className="text-xl font-semibold text-white mb-3">Crew</h3>
                 <div className="space-y-2">
@@ -248,8 +231,6 @@ export const MediaDetails = () => {
                 </div>
               </div>
             </div>
-
-            {/* Seasons (TV Only) */}
             {mediaType === "tv" && media.seasons.length > 0 && (
               <div className="mt-8">
                 <h3 className="text-xl font-semibold text-white mb-4">

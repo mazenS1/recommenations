@@ -41,20 +41,20 @@ export const Recommendations = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-indigo-500 border-t-transparent"></div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent" />
       </div>
     );
   }
 
   if (!recommendations.length) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          <h2 className="text-2xl font-bold text-foreground mb-2">
             No Recommendations Yet
           </h2>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-primary/60">
             Rate more movies and TV shows to get personalized recommendations!
           </p>
         </div>
@@ -63,21 +63,14 @@ export const Recommendations = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 pt-16">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+        <h1 className="text-3xl font-bold text-foreground mb-8">
           Recommended for You
         </h1>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {recommendations.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              id={movie.id}
-              title={movie.title}
-              poster_path={movie.poster_path}
-              vote_average={movie.vote_average}
-              media_type="movie"
-            />
+          {recommendations.map((media) => (
+            <MediaCard key={media.id} {...media} />
           ))}
         </div>
       </div>
