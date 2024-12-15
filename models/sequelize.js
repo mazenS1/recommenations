@@ -23,7 +23,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 sequelize
   .authenticate()
   .then(() => {
-    // Connection successful, no need for console log
+    
   })
   .catch(err => {
     // Handle error silently or use proper error logging service

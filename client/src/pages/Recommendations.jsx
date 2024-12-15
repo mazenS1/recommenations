@@ -16,20 +16,16 @@ export const Recommendations = () => {
 
       const userId = user?.id || user?.user_id || user?._id;
       if (!userId) {
-        console.error("User not found", user);
         toast.error("Please log in to see recommendations");
         return;
       }
 
       try {
-        console.log("Fetching recommendations for user:", userId);
         const data = await getRecommendations(userId);
-        console.log("Recommendations:", data);
 
         if (data && Array.isArray(data.results)) {
           setRecommendations(data.results.filter((movie) => movie.poster_path));
         } else {
-          console.error("Invalid recommendations data:", data);
           setRecommendations([]);
         }
       } catch (error) {

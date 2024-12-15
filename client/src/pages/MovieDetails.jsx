@@ -63,7 +63,6 @@ export const MovieDetails = () => {
             .slice(0, 3),
         });
       } catch (error) {
-        console.error("Error fetching movie details:", error);
         toast.error("Failed to fetch movie details");
       } finally {
         setLoading(false);

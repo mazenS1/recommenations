@@ -24,7 +24,6 @@ export const RatingsProvider = ({ children }) => {
       }
 
       const data = await response.json();
-      console.log("Ratings data:", data);
 
       const transformedRatings = data.map((rating) => ({
         id: rating.Movie.movie_id,
@@ -38,7 +37,6 @@ export const RatingsProvider = ({ children }) => {
 
       setRatings(transformedRatings);
     } catch (error) {
-      console.error("Error fetching ratings:", error);
       toast.error("Failed to load ratings");
     } finally {
       setLoading(false);

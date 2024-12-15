@@ -22,7 +22,6 @@ const fetchWithRetry = async (url, options, retries = 3, delayMs = 2000) => {
     try {
       return await fetchWithAuth(url, options);
     } catch (error) {
-      console.error(`Request failed, attempt ${i + 1}/${retries}`, error);
       
       // If it's an auth error, don't retry
       if (error instanceof AuthError) {

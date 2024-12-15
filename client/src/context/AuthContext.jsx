@@ -47,7 +47,6 @@ export const AuthProvider = ({ children }) => {
           handleAuthError();
         }
       } catch (error) {
-        console.error("Auth initialization failed:", error);
         handleAuthError();
       } finally {
         setIsLoading(false);
@@ -73,7 +72,6 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("user", JSON.stringify(response.user));
       return response;
     } catch (error) {
-      console.error("Auth context login error:", error);
       throw error;
     } finally {
       setIsLoading(false);
@@ -96,7 +94,6 @@ export const AuthProvider = ({ children }) => {
     try {
       await authLogout();
     } catch (error) {
-      console.error("Logout error:", error);
     } finally {
       localStorage.removeItem("user");
       setUser(null);

@@ -103,12 +103,10 @@ export const MediaDetails = () => {
               .slice(0, 3),
           }));
         } catch (error) {
-          console.error("Error fetching credits:", error);
           toast.error("Failed to fetch credits");
           // Don't set main error state for credits failure
         }
       } catch (error) {
-        console.error("Error fetching details:", error);
         setError(error.message || "Failed to load content");
         toast.error("Failed to fetch details");
       } finally {

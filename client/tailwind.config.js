@@ -5,10 +5,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        dark: {
-          primary: '#1a1a1a',
-          secondary: '#2d2d2d',
-          accent: '#3b82f6',
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
       },
     },

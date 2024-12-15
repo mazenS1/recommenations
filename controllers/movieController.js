@@ -46,7 +46,6 @@ const getMovieFromTMDB = async (req, res) => {
         return res.status(200).json(movieData);
 
     } catch (error) {
-        console.error('Error fetching movie from TMDB:', error);
         return res.status(error.status || 500).json({ 
             message: 'Server error', 
             error: error.message 
@@ -104,7 +103,6 @@ const fetchAndSaveMovie = async (movieId) => {
 
         return movie;
     } catch (error) {
-        console.error('Error in fetchAndSaveMovie:', error);
         throw new Error(`Failed to fetch and save movie: ${error.message}`);
     }
 };
@@ -137,7 +135,6 @@ const getMovieDetails = async (req, res) => {
         return res.status(200).json(data);
 
     } catch (error) {
-        console.error('Error fetching movie details:', error);
         return res.status(error.status || 500).json({ 
             message: 'Server error', 
             error: error.message 
@@ -173,7 +170,6 @@ const getMovieCredits = async (req, res) => {
         return res.status(200).json(data);
 
     } catch (error) {
-        console.error('Error fetching movie credits:', error);
         return res.status(error.status || 500).json({ 
             message: 'Server error', 
             error: error.message 

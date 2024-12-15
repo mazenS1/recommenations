@@ -76,7 +76,6 @@ app.get('*', (req, res) => {
 const startServer = async () => {
     try {
         await sequelize.sync();
-        console.log('Database Synced');
         
         const port = process.env.PORT || 3000;
         const host = '0.0.0.0';

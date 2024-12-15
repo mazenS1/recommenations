@@ -3,7 +3,6 @@ import { fetchWithAuth } from './apiClient';
 
 export const login = async (email, password) => {
   try {
-    console.log('Sending login request with:', { email });
 
     const response = await fetchWithAuth(`${API_BASE_URL}/users/login`, {
       method: 'POST',
@@ -11,7 +10,6 @@ export const login = async (email, password) => {
     });
 
     const data = await response.json();
-    console.log('Server response:', { status: response.status, data });
 
     if (!response.ok) {
       throw new Error(data.message || `Login failed with status ${response.status}`);
@@ -19,7 +17,6 @@ export const login = async (email, password) => {
 
     return data;
   } catch (error) {
-    console.error('Detailed login error:', error);
     throw error;
   }
 };
@@ -54,7 +51,6 @@ export const getCurrentUser = async () => {
     const data = await response.json();
     return data;  
   } catch (error) {  
-    console.error('Auth check error:', error);  
     throw error;  
   }  
 };

@@ -31,7 +31,6 @@ export const Login = () => {
           return;
         }
 
-        console.log("Attempting login with:", { email: trimmedEmail });
         await login(trimmedEmail, trimmedPassword);
         toast.success("Login successful!");
       } else {
@@ -39,7 +38,6 @@ export const Login = () => {
         toast.success("Registration successful!");
       }
     } catch (error) {
-      console.error("Login component error:", error);
       toast.error(error.message || "Authentication failed");
     }
   };

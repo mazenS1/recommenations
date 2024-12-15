@@ -15,7 +15,6 @@ const getRecommendationsFromTMDB = async (req, res) => {
 
         return res.json({ results: data.results }); // Wrap in results object
     } catch (error) {
-        console.error("Error fetching TMDB recommendations:", error);
         return res.status(500).json({
             message: "Failed to fetch TMDB recommendations",
             error: error.message
@@ -31,12 +30,9 @@ const getRecommendationById = async (req, res) => {
             return res.status(400).json({ message: "User ID required" });
         }
 
-        // Remove the external API call and just use TMDB
-        console.log("Fetching recommendations from TMDB");
         return await getRecommendationsFromTMDB(req, res);
         
     } catch (error) {
-        console.error("Error in getRecommendationById:", error);
         return res.status(500).json({ 
             message: "Error fetching recommendations",
             error: error.message 

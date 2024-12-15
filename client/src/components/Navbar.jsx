@@ -16,18 +16,18 @@ export const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-indigo-600/80 dark:bg-gray-900/80 backdrop-blur-sm text-white shadow-lg z-50">
+    <nav className="fixed top-0 left-0 right-0 bg-background/80 backdrop-blur-sm border-b z-50">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
             <Film className="w-8 h-8" />
-            <span className="font-bold text-xl"> قيم</span>
+            <span className="font-bold text-xl">قيم</span>
           </Link>
 
           {/* Mobile menu button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2"
+            className="md:hidden p-2 hover:bg-secondary rounded-md"
           >
             {isMenuOpen ? (
               <X className="w-6 h-6" />
@@ -43,10 +43,10 @@ export const Navbar = () => {
                 key={path}
                 to={path}
                 className={clsx(
-                  "hover:text-indigo-200 flex items-center space-x-1",
+                  "hover:text-primary/80 flex items-center space-x-1 transition-colors",
                   location.pathname === path
-                    ? "text-white font-semibold"
-                    : "text-indigo-100"
+                    ? "text-primary font-semibold"
+                    : "text-primary/60"
                 )}
               >
                 {Icon && <Icon className="w-4 h-4" />}
@@ -54,10 +54,10 @@ export const Navbar = () => {
               </Link>
             ))}
             <div className="flex items-center space-x-4">
-              <span className="text-sm">{user?.name}</span>
+              <span className="text-sm text-primary/80">{user?.name}</span>
               <button
                 onClick={logout}
-                className="flex items-center space-x-1 hover:text-indigo-200"
+                className="flex items-center space-x-1 hover:text-primary/80 transition-colors"
               >
                 <LogOut className="w-5 h-5" />
                 <span>Logout</span>
@@ -68,33 +68,33 @@ export const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 space-y-4">
+          <div className="md:hidden py-4 space-y-4 border-t">
             {navLinks.map(({ path, label, icon: Icon }) => (
               <Link
                 key={path}
                 to={path}
                 onClick={() => setIsMenuOpen(false)}
                 className={clsx(
-                  "block hover:text-indigo-200 py-2 flex items-center space-x-2",
+                  "block hover:text-primary/80 py-2 flex items-center space-x-2 transition-colors",
                   location.pathname === path
-                    ? "text-white font-semibold"
-                    : "text-indigo-100"
+                    ? "text-primary font-semibold"
+                    : "text-primary/60"
                 )}
               >
                 {Icon && <Icon className="w-4 h-4" />}
                 <span>{label}</span>
               </Link>
             ))}
-            <div className="pt-4 border-t border-indigo-500">
+            <div className="pt-4 border-t">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-sm">{user?.name}</span>
+                <span className="text-sm text-primary/80">{user?.name}</span>
               </div>
               <button
                 onClick={() => {
                   logout();
                   setIsMenuOpen(false);
                 }}
-                className="flex items-center space-x-1 hover:text-indigo-200"
+                className="flex items-center space-x-1 hover:text-primary/80 transition-colors"
               >
                 <LogOut className="w-5 h-5" />
                 <span>Logout</span>
