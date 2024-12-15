@@ -76,9 +76,11 @@ export const Recommendations = () => {
           {recommendations.map((movie) => (
             <MovieCard
               key={movie.id}
+              id={movie.id}
               title={movie.title}
               poster_path={movie.poster_path}
               vote_average={movie.vote_average}
+              media_type="movie"
             />
           ))}
         </div>
