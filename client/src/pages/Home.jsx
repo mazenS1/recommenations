@@ -68,9 +68,9 @@ export const Home = () => {
     }
   }, [media]);
 
-  const handleRate = async (media, rating) => {
+  const handleRate = async (media, rating, notes) => {
     try {
-      await addRating(media, rating);
+      await addRating(media, rating, notes);
       toast.success("Rating saved");
     } catch (error) {
       toast.error("Failed to save rating");
@@ -127,7 +127,7 @@ export const Home = () => {
                 poster_path={item.poster_path}
                 vote_average={item.vote_average}
                 media_type={item.media_type}
-                onRate={(rating) => handleRate(item, rating)}
+                onRate={(rating, notes) => handleRate(item, rating, notes)}
               />
             ))}
           </div>

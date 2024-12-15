@@ -45,6 +45,10 @@ const Rating = sequelize.define('Rating', {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
+  notes: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
 });
 
 Rating.belongsTo(Movie, {

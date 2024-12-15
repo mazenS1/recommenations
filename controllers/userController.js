@@ -145,10 +145,10 @@ const checkUser = async (req, res) => {
 
 const rateMedia = async (req, res) => {
   try {
-    const { movieId, rating, mediaType } = req.body;
+    const { movieId, rating, mediaType, notes } = req.body;
     const userId = req.user.userId;
 
-    console.log("Received rating request:", { movieId, rating, mediaType, userId });
+    console.log("Received rating request:", { movieId, rating, mediaType, userId, notes });
 
     if (!movieId || !rating || !userId || !mediaType) {
       return res.status(400).json({ 
@@ -185,7 +185,8 @@ const rateMedia = async (req, res) => {
     if (existingRating) {
       await existingRating.update({ 
         rating,
-        media_type: mediaType
+        media_type: mediaType,
+        notes: notes || existingRating.notes
       });
       return res.json({ message: 'Rating updated successfully' });
     }
@@ -194,7 +195,8 @@ const rateMedia = async (req, res) => {
       user_id: userId,
       movie_id: movieId,
       media_type: mediaType,
-      rating
+      rating,
+      notes
     });
 
     res.status(201).json({ message: 'Rating added successfully' });
@@ -245,7 +247,8 @@ const getUserRatings = async (req, res) => {
       poster_path: rating.Movie.metadata?.poster_path,
       vote_average: rating.Movie.metadata?.vote_average,
       rating: rating.rating,
-      media_type: rating.media_type
+      media_type: rating.media_type,
+      notes: rating.notes
     }));
 
     res.json(transformedRatings);

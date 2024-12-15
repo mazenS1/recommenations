@@ -21,9 +21,9 @@ export const MyRatings = () => {
     await removeRating(id);
   };
 
-  const handleUpdateRating = async (movie, newRating) => {
+  const handleUpdateRating = async (movie, newRating, notes) => {
     try {
-      await addRating(movie, newRating);
+      await addRating(movie, newRating, notes);
     } catch (error) {
       toast.error("Failed to update rating");
     }
@@ -63,7 +63,9 @@ export const MyRatings = () => {
                 {...media}
                 userRating={media.rating}
                 vote_average={media.rating}
-                onRate={(rating) => handleUpdateRating(media, rating)}
+                onRate={(rating, notes) =>
+                  handleUpdateRating(media, rating, notes)
+                }
               />
               <button
                 onClick={() => handleRemoveRating(media.id)}
@@ -71,6 +73,13 @@ export const MyRatings = () => {
               >
                 <Trash2 className="w-4 h-4 text-white" />
               </button>
+              {media.notes && (
+                <div className="mt-2 p-3 bg-secondary/30 rounded-md">
+                  <p className="text-sm text-primary/80 line-clamp-3">
+                    {media.notes}
+                  </p>
+                </div>
+              )}
             </div>
           ))}
         </div>
