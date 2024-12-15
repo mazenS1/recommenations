@@ -5,14 +5,27 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    types: [opened, synchronize]
+
 jobs:
   deploy:
     name: Deploy app
     runs-on: ubuntu-latest
-    concurrency: deploy-group    # optional: ensure only one action runs at a time
+    concurrency: deploy-group # optional: ensure only one action runs at a time
     steps:
       - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --remote-only
+      - name: Create preview deployment for PR
+        if: github.event_name == 'pull_request'
+        run: |
+          APP_NAME="recommendations-pr-${{ github.event.pull_request.number }}"
+          flyctl launch --name $APP_NAME --no-deploy
+          flyctl deploy --app $APP_NAME --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - name: Deploy to production
+        if: github.event_name == 'push'
+        run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
