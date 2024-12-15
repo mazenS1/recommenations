@@ -9,7 +9,6 @@ import { ErrorMessage } from "../components/ErrorMessage";
 import { useAuth } from "../context/AuthContext";
 import { AuthError } from "../lib/apiClient";
 
-const key = import.meta.env.VITE_TMDB_API_KEY;
 export const Home = () => {
   const [query, setQuery] = useState("");
   const [media, setMedia] = useState([]);
@@ -25,26 +24,18 @@ export const Home = () => {
 
       if (!searchQuery.trim()) {
         const data = await getTrending();
-        if (data && Array.isArray(data.results)) {
-          setMedia(data.results.filter((item) => item.poster_path));
-        } else {
-          setMedia([]);
-        }
+        setMedia(data.results);
         return;
       }
 
       const data = await searchMulti(searchQuery);
-      if (data && Array.isArray(data.results)) {
-        setMedia(
-          data.results.filter(
-            (item) =>
-              (item.media_type === "movie" || item.media_type === "tv") &&
-              item.poster_path
-          )
-        );
-      } else {
-        setMedia([]);
-      }
+      setMedia(
+        data.results.filter(
+          (item) =>
+            (item.media_type === "movie" || item.media_type === "tv") &&
+            item.poster_path
+        )
+      );
     } catch (error) {
       if (error instanceof AuthError) {
         handleUnauthorized();
@@ -84,20 +75,24 @@ export const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 py-4 sm:py-8 pt-24">
-        <div className="mb-4 sm:mb-8">
+        <div className="mb-8">
           <div className="max-w-2xl mx-auto">
             <div className="relative">
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search for movies and TV shows..."
-                className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none pr-10"
-                disabled={loading}
-              />
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search for movies and TV shows..."
+                  className="w-full px-4 py-3 rounded-lg bg-secondary/50 border border-border text-foreground placeholder:text-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/20"
+                  disabled={loading}
+                />
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <Search className="w-5 h-5 text-primary/60" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -106,19 +101,19 @@ export const Home = () => {
           <ErrorMessage message={error} retry={() => searchMedia(query)} />
         ) : loading ? (
           <div className="flex flex-col items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-indigo-500 border-t-transparent mb-4"></div>
-            <p className="text-gray-600 dark:text-gray-400">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4" />
+            <p className="text-primary/60">
               {query ? "Searching..." : "Loading trending content..."}
             </p>
           </div>
         ) : media.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-primary/60">
               {query ? "No results found" : "No content available"}
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {media.map((item) => (
               <MediaCard
                 key={item.id}

@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
+import React, { createContext, useContext, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 import { API_BASE_URL } from "../config";
 import { fetchWithAuth } from "../lib/apiClient";
@@ -24,7 +18,6 @@ export const RatingsProvider = ({ children }) => {
       }
 
       const data = await response.json();
-
       const transformedRatings = data.map((rating) => ({
         id: rating.Movie.movie_id,
         title: rating.Movie.title,
@@ -44,8 +37,17 @@ export const RatingsProvider = ({ children }) => {
   }, []);
 
   const addRating = async (media, rating) => {
-    setLoading(true);
     try {
+      setRatings((prevRatings) => {
+        const exists = prevRatings.find((r) => r.id === media.id);
+        if (exists) {
+          return prevRatings.map((r) =>
+            r.id === media.id ? { ...r, rating } : r
+          );
+        }
+        return [...prevRatings, { ...media, rating }];
+      });
+
       const response = await fetchWithAuth(`${API_BASE_URL}/users/rate-movie`, {
         method: "POST",
         body: JSON.stringify({
@@ -58,27 +60,16 @@ export const RatingsProvider = ({ children }) => {
         const error = await response.json();
         throw new Error(error.message || "Failed to save rating");
       }
-
-      setRatings((prev) => {
-        const exists = prev.find((r) => r.id === media.id);
-        if (exists) {
-          return prev.map((r) =>
-            r.id === media.id ? { ...media, rating } : r
-          );
-        }
-        return [...prev, { ...media, rating }];
-      });
-
-      toast.success("Rating saved successfully");
     } catch (error) {
-      toast.error(error.message || "Failed to save rating");
-    } finally {
-      setLoading(false);
+      await fetchRatings();
+      throw error;
     }
   };
 
   const removeRating = async (id) => {
     try {
+      setRatings((prevRatings) => prevRatings.filter((r) => r.id !== id));
+
       const response = await fetchWithAuth(
         `${API_BASE_URL}/users/rate-movie/${id}`,
         {
@@ -89,10 +80,8 @@ export const RatingsProvider = ({ children }) => {
       if (!response.ok) {
         throw new Error("Failed to remove rating");
       }
-
-      setRatings((prev) => prev.filter((r) => r.id !== id));
-      toast.success("Rating removed successfully");
     } catch (error) {
+      await fetchRatings();
       toast.error(error.message || "Failed to remove rating");
     }
   };

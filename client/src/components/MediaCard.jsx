@@ -1,5 +1,5 @@
-import React from "react";
-import { Star, Tv, Film } from "lucide-react";
+import React, { useState } from "react";
+import { Star, Tv, Film, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export const MediaCard = ({
@@ -8,18 +8,28 @@ export const MediaCard = ({
   name,
   poster_path,
   vote_average,
-  media_type,
+  media_type = "movie",
   onRate,
   userRating,
 }) => {
+  const [isRating, setIsRating] = useState(false);
   const navigate = useNavigate();
   const displayTitle = title || name;
   const TypeIcon = media_type === "movie" ? Film : Tv;
 
   const handleCardClick = (e) => {
-    // Don't navigate if clicking on rating stars
     if (e.target.closest(".rating-stars")) return;
     navigate(`/${media_type}/${id}`);
+  };
+
+  const handleRate = async (rating) => {
+    if (isRating) return;
+    setIsRating(true);
+    try {
+      await onRate(rating);
+    } finally {
+      setIsRating(false);
+    }
   };
 
   return (
@@ -54,11 +64,14 @@ export const MediaCard = ({
                   key={rating}
                   onClick={(e) => {
                     e.stopPropagation();
-                    onRate(rating);
+                    handleRate(rating);
                   }}
-                  className="focus:outline-none touch-manipulation"
+                  disabled={isRating}
+                  className="focus:outline-none touch-manipulation disabled:opacity-50"
                 >
-                  {rating <= (userRating || 0) ? (
+                  {isRating ? (
+                    <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin text-primary/60" />
+                  ) : rating <= (userRating || 0) ? (
                     <Star className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500 fill-yellow-500" />
                   ) : (
                     <Star className="w-5 h-5 sm:w-6 sm:h-6 text-secondary" />

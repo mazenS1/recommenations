@@ -119,7 +119,7 @@ export const MediaDetails = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-16">
+      <div className="min-h-screen bg-background pt-16">
         <ErrorMessage message={error} retry={() => window.location.reload()} />
       </div>
     );
@@ -127,10 +127,10 @@ export const MediaDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-indigo-500 border-t-transparent mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Loading content...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4" />
+          <p className="text-primary/60">Loading content...</p>
         </div>
       </div>
     );
