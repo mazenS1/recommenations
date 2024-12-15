@@ -43,7 +43,3 @@ yarn-error.log*
 !package-lock.json
 !client/package.json
 !client/package-lock.json
-
-# Vite
-.vite/
-**/vite/

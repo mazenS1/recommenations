@@ -65,10 +65,13 @@ const startServer = async () => {
         await sequelize.sync();
         console.log('Database Synced');
         
+        const port = process.env.PORT || 3000;
+        const host = '0.0.0.0';
+        
         return new Promise((resolve, reject) => {
-            const server = app.listen(process.env.PORT || 30010)
+            const server = app.listen(port, host)
                 .once('listening', () => {
-                    console.log(`Server running at http://localhost:${process.env.PORT || 30010}`);
+                    console.log(`Server running on ${host}:${port}`);
                     resolve(server);
                 })
                 .once('error', (err) => {
