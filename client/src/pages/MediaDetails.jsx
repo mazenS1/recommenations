@@ -233,14 +233,14 @@ export const MediaDetails = () => {
             </div>
             {mediaType === "tv" && media.seasons.length > 0 && (
               <div className="mt-8">
-                <h3 className="text-xl font-semibold text-white mb-4">
+                <h3 className="text-xl font-semibold text-foreground mb-4">
                   Seasons
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {media.seasons.map((season) => (
                     <div
                       key={season.id}
-                      className="bg-gray-800 rounded-lg p-4 flex gap-4"
+                      className="bg-secondary rounded-lg p-4 flex gap-4"
                     >
                       {season.poster_path && (
                         <img
@@ -250,14 +250,14 @@ export const MediaDetails = () => {
                         />
                       )}
                       <div>
-                        <h4 className="text-white font-semibold">
+                        <h4 className="text-foreground font-semibold">
                           {season.name}
                         </h4>
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-primary/60 text-sm">
                           {season.episode_count} Episodes
                         </p>
                         {season.air_date && (
-                          <p className="text-gray-400 text-sm">
+                          <p className="text-primary/60 text-sm">
                             {new Date(season.air_date).getFullYear()}
                           </p>
                         )}

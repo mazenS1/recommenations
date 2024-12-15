@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Search } from "lucide-react";
 import { MediaCard } from "../components/MediaCard";
 import { searchMulti, getTrending } from "../lib/tmdb";
@@ -16,6 +16,9 @@ export const Home = () => {
   const [error, setError] = useState(null);
   const { addRating } = useRatings();
   const { handleUnauthorized } = useAuth();
+
+  // Ref for the search input
+  const searchInputRef = useRef(null);
 
   const searchMedia = async (searchQuery) => {
     try {
@@ -58,6 +61,13 @@ export const Home = () => {
     return () => debouncedSearch.cancel();
   }, [query, debouncedSearch]);
 
+  useEffect(() => {
+    // Refocus the input field when media changes
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [media]);
+
   const handleRate = async (item, rating) => {
     try {
       await addRating(
@@ -83,6 +93,7 @@ export const Home = () => {
               <div className="relative">
                 <input
                   type="text"
+                  ref={searchInputRef} // Attach ref to the input field
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search for movies and TV shows..."
