@@ -71,7 +71,6 @@ export const logout = async () => {
 
     return response;
   } catch (error) {
-    console.error('Logout error:', error);
     throw error;
   }
 };

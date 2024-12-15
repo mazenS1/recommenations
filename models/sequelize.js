@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
-  logging: false, // Fixes the deprecation warning
+  logging: false,
   dialectOptions: {
     ssl: {
       require: true,
@@ -23,10 +23,10 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Database connection established successfully.');
+    // Connection successful, no need for console log
   })
   .catch(err => {
-    console.error('Unable to connect to the database:', err);
+    // Handle error silently or use proper error logging service
   });
 
 module.exports = sequelize;

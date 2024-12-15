@@ -28,7 +28,6 @@ export const Home = () => {
         if (data && Array.isArray(data.results)) {
           setMedia(data.results.filter((item) => item.poster_path));
         } else {
-          console.error("Invalid trending data:", data);
           setMedia([]);
         }
         return;
@@ -44,7 +43,6 @@ export const Home = () => {
           )
         );
       } else {
-        console.error("Invalid search data:", data);
         setMedia([]);
       }
     } catch (error) {

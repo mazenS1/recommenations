@@ -8,14 +8,7 @@ primary_region = 'bom'
 
 [build]
 
-[env]
-  PORT = "3000"
-  NODE_ENV = "production"
-  DATABASE_URL = "postgresql://neondb_owner:BHVpN9aX7RIZ@ep-broad-heart-a2f5kvrt-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require"
-  JWT_SECRET = "secret"
-  KEY = "3fd2be6f0c70a2a598f084ddfb75487c"
-  UPSTASH_REDIS_URL = "https://immense-lemming-24171.upstash.io"
-  UPSTASH_REDIS_TOKEN = "AV5rAAIjcDFjMjNjMGQ4MTU0MmQ0ZjIwYWFmNmViNjQwMzFhOTBlYXAxMA"
+
 
 [http_service]
   internal_port = 3000

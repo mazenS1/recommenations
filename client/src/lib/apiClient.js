@@ -21,9 +21,6 @@ export const fetchWithAuth = async (url, options = {}) => {
   const cleanUrl = url.replace(/([^:]\/)\/+/g, "$1");
   
   try {
-    console.log('Making authenticated request to:', cleanUrl);
-
-    // Add SameSite and Secure attributes for cross-origin cookies
     const response = await fetch(cleanUrl, {
       ...defaultOptions,
       ...options,
@@ -31,21 +28,17 @@ export const fetchWithAuth = async (url, options = {}) => {
         ...defaultOptions.headers,
         ...options.headers,
       },
-      credentials: 'include', // Ensure this is always set
+      credentials: 'include',
     });
-
-    console.log('Response received:', { status: response.status });
 
     // Handle authentication errors
     if (response.status === 401) {
-      console.log('Authentication error - clearing user data');
       localStorage.removeItem("user");
       throw new AuthError();
     }
 
     return response;
   } catch (error) {
-    console.error('Request failed:', error);
     throw error;
   }
 }; 
