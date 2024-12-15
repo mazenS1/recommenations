@@ -12,7 +12,7 @@ router.post('/register',  userController.register);
 router.post('/login',  userController.login);
 
 // Protected routes
-router.post('/rate-movie', authenticateToken, userController.rateMovie);
+router.post('/rate-movie', authenticateToken, userController.rateMedia);
 router.delete('/rate-movie/:movieId', authenticateToken, userController.deleteRating);
 router.get('/ratings', authenticateToken, userController.getUserRatings);
 

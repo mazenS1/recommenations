@@ -26,6 +26,7 @@ const Movie = sequelize.define('Movie', {
   metadata: {
     type: DataTypes.JSONB,
     allowNull: true,
+    defaultValue: {}
   },
 }, {
   timestamps: false,

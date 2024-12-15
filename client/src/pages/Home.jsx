@@ -68,17 +68,10 @@ export const Home = () => {
     }
   }, [media]);
 
-  const handleRate = async (item, rating) => {
+  const handleRate = async (media, rating) => {
     try {
-      await addRating(
-        {
-          id: item.id,
-          title: item.title || item.name,
-          poster_path: item.poster_path,
-          vote_average: item.vote_average,
-        },
-        rating
-      );
+      await addRating(media, rating);
+      toast.success("Rating saved");
     } catch (error) {
       toast.error("Failed to save rating");
     }

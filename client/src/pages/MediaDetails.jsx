@@ -37,6 +37,7 @@ export const MediaDetails = () => {
   const [loading, setLoading] = useState(true);
   const { addRating } = useRatings();
   const [error, setError] = useState(null);
+  const [userRating, setUserRating] = useState(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -117,6 +118,25 @@ export const MediaDetails = () => {
     fetchDetails();
   }, [id, mediaType]);
 
+  const handleRate = async (rating) => {
+    try {
+      await addRating(
+        {
+          id: media.id,
+          title: media.title,
+          poster_path: media.poster_path,
+          vote_average: media.vote_average,
+          media_type: mediaType,
+        },
+        rating
+      );
+      setUserRating(rating);
+      toast.success("Rating saved successfully");
+    } catch (error) {
+      toast.error("Failed to save rating");
+    }
+  };
+
   if (error) {
     return (
       <div className="min-h-screen bg-background pt-16">
@@ -186,6 +206,23 @@ export const MediaDetails = () => {
               <div className="flex items-center gap-1">
                 <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
                 <span>{media.vote_average.toFixed(1)}</span>
+                <div className="ml-4 flex gap-1">
+                  {[1, 2, 3, 4, 5].map((value) => (
+                    <button
+                      key={value}
+                      onClick={() => handleRate(value)}
+                      className="focus:outline-none"
+                    >
+                      <Star
+                        className={`w-4 h-4 ${
+                          value <= userRating
+                            ? "text-yellow-500 fill-yellow-500"
+                            : "text-gray-400"
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="flex flex-wrap gap-2 mb-6">

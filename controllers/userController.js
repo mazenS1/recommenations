@@ -5,6 +5,7 @@ const { JWT_SECRET } = require('../middleware/auth');
 const Rating = require('../models/Rating');
 const Movie = require('../models/Movie');
 const movieController = require('./movieController');
+const tvController = require('./tvController');
 
 
 
@@ -142,52 +143,68 @@ const checkUser = async (req, res) => {
     }
 }
 
-const rateMovie = async (req, res) => {
-    try {
-        const { movieId, rating } = req.body;
-        const userId = req.user.userId;
-        console.log("userId", userId, "movieId", movieId, "rating", rating);
-        if (!movieId || !rating || !userId) {
-            return res.status(400).json({ message: 'Missing required fields' });
-            
-            
-        }
+const rateMedia = async (req, res) => {
+  try {
+    const { movieId, rating, mediaType } = req.body;
+    const userId = req.user.userId;
 
-        // Validate rating value
-        if (rating < 1 || rating > 5) {
-            return res.status(400).json({ message: 'Rating must be between 1 and 5' });
-        }
+    console.log("Received rating request:", { movieId, rating, mediaType, userId });
 
-        // Check for existing rating
-        const existingRating = await Rating.findOne({
-            where: { user_id: userId, movie_id: movieId }
-        });
-
-        // Check if movie exists in database, if not query it from TMDB
-        const movie = await Movie.findOne({ where: { movie_id: movieId } });
-        if (!movie) {
-            await movieController.fetchAndSaveMovie(movieId);
-        }
-
-
-
-        if (existingRating) {
-            // Update existing rating
-            await existingRating.update({ rating });
-            return res.json({ message: 'Rating updated successfully' });
-        }
-
-        // Create new rating
-        await Rating.create({
-            user_id: userId,
-            movie_id: movieId,
-            rating
-        });
-
-        res.status(201).json({ message: 'Rating added successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+    if (!movieId || !rating || !userId || !mediaType) {
+      return res.status(400).json({ 
+        message: 'Missing required fields',
+        received: { movieId, rating, mediaType, userId }
+      });
     }
+
+    // Validate rating value
+    const ratingNum = parseInt(rating);
+    if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 5) {
+      return res.status(400).json({ 
+        message: 'Rating must be between 1 and 5',
+        received: rating
+      });
+    }
+
+    // First ensure the media exists in our database
+    let media = await Movie.findOne({ where: { movie_id: movieId }});
+    if (!media) {
+      // If media doesn't exist, fetch and save it based on type
+      media = mediaType === 'tv' 
+        ? await tvController.fetchAndSaveTvShow(movieId)
+        : await movieController.fetchAndSaveMovie(movieId);
+    }
+
+    const existingRating = await Rating.findOne({
+      where: { 
+        user_id: userId, 
+        movie_id: movieId
+      }
+    });
+
+    if (existingRating) {
+      await existingRating.update({ 
+        rating,
+        media_type: mediaType
+      });
+      return res.json({ message: 'Rating updated successfully' });
+    }
+
+    await Rating.create({
+      user_id: userId,
+      movie_id: movieId,
+      media_type: mediaType,
+      rating
+    });
+
+    res.status(201).json({ message: 'Rating added successfully' });
+  } catch (error) {
+    console.error('Error in rateMedia:', error);
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message
+    });
+  }
 };
 
 const deleteRating = async (req, res) => {
@@ -211,22 +228,34 @@ const deleteRating = async (req, res) => {
 };
 
 const getUserRatings = async (req, res) => {
-    try {
-        const userId = req.user.userId;
-        
-        const ratings = await Rating.findAll({
-            where: { user_id: userId },
-            include: [{ model: Movie }]
-        });
+  try {
+    const userId = req.user.userId;
+    
+    const ratings = await Rating.findAll({
+      where: { user_id: userId },
+      include: [{
+        model: Movie,
+        attributes: ['movie_id', 'title', 'metadata']
+      }]
+    });
 
-        res.json(ratings);
-    } catch (error) {
-        console.error('Error fetching user ratings:', error);
-        res.status(500).json({ 
-            message: 'Failed to fetch ratings',
-            error: error.message 
-        });
-    }
+    const transformedRatings = ratings.map(rating => ({
+      id: rating.Movie.movie_id,
+      title: rating.Movie.title,
+      poster_path: rating.Movie.metadata?.poster_path,
+      vote_average: rating.Movie.metadata?.vote_average,
+      rating: rating.rating,
+      media_type: rating.media_type
+    }));
+
+    res.json(transformedRatings);
+  } catch (error) {
+    console.error('Error fetching user ratings:', error);
+    res.status(500).json({ 
+      message: 'Failed to fetch ratings',
+      error: error.message 
+    });
+  }
 };
 
 const logout = async (req, res) => {
@@ -248,7 +277,7 @@ module.exports = {
     register,
     checkUser,
     logout,
-    rateMovie,
+    rateMedia,
     deleteRating,
     getUserRatings
 };

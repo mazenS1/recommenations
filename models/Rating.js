@@ -26,6 +26,13 @@ const Rating = sequelize.define('Rating', {
     },
     allowNull: false,
   },
+  media_type: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      isIn: [['movie', 'tv']]
+    }
+  },
   rating: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -38,17 +45,11 @@ const Rating = sequelize.define('Rating', {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
-}, {
-  timestamps: false,
-  tableName: 'ratings', // Ensure the table name matches the database schema
 });
 
-// Add associations
-Rating.associate = (models) => {
-  Rating.belongsTo(models.Movie, {
-    foreignKey: 'movie_id',
-    targetKey: 'movie_id'
-  });
-};
+Rating.belongsTo(Movie, {
+  foreignKey: 'movie_id',
+  targetKey: 'movie_id'
+});
 
 module.exports = Rating;
