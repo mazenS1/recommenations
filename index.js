@@ -21,7 +21,20 @@ const port = process.env.PORT || 3000;
 const path = require('path');
 
 // Security middleware
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        imgSrc: ["'self'", "data:", "https://image.tmdb.org"],
+        // Add other directives as needed
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        connectSrc: ["'self'"],
+      },
+    },
+  })
+);
 app.use(cors({
     origin: process.env.NODE_ENV === 'development' 
         ? ['http://localhost:5173', 'http://127.0.0.1:5173']
