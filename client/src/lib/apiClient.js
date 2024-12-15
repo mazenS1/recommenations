@@ -37,6 +37,8 @@ export const fetchWithAuth = async (url, options = {}) => {
       throw new AuthError();
     }
 
+    
+
     return response;
   } catch (error) {
     throw error;

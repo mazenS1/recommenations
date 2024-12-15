@@ -26,7 +26,12 @@ export const RatingsProvider = ({ children }) => {
     }
   }, []);
 
-  const addRating = async (media, rating) => {
+  const addRating = async (media, rating, notes) => {
+    console.log("RatingsContext - addRating received:", {
+      media,
+      rating,
+      notes,
+    });
     try {
       if (!rating || typeof rating !== "number" || rating < 1 || rating > 5) {
         throw new Error("Invalid rating value");
@@ -36,17 +41,20 @@ export const RatingsProvider = ({ children }) => {
         const exists = prevRatings.find((r) => r.id === media.id);
         if (exists) {
           return prevRatings.map((r) =>
-            r.id === media.id ? { ...r, rating } : r
+            r.id === media.id ? { ...r, rating, notes } : r
           );
         }
-        return [...prevRatings, { ...media, rating }];
+        return [...prevRatings, { ...media, rating, notes }];
       });
 
       const payload = {
         movieId: media.id,
         rating: parseInt(rating),
         mediaType: media.media_type || "movie",
+        notes,
       };
+
+      console.log("RatingsContext - Sending payload:", payload);
 
       const response = await fetchWithAuth(`${API_BASE_URL}/users/rate-movie`, {
         method: "POST",
