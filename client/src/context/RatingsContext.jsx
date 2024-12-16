@@ -27,11 +27,6 @@ export const RatingsProvider = ({ children }) => {
   }, []);
 
   const addRating = async (media, rating, notes) => {
-    console.log("RatingsContext - addRating received:", {
-      media,
-      rating,
-      notes,
-    });
     try {
       if (!rating || typeof rating !== "number" || rating < 1 || rating > 5) {
         throw new Error("Invalid rating value");
@@ -54,8 +49,6 @@ export const RatingsProvider = ({ children }) => {
         notes,
       };
 
-      console.log("RatingsContext - Sending payload:", payload);
-
       const response = await fetchWithAuth(`${API_BASE_URL}/users/rate-movie`, {
         method: "POST",
         body: JSON.stringify(payload),
@@ -66,7 +59,6 @@ export const RatingsProvider = ({ children }) => {
         throw new Error(error.message || "Failed to save rating");
       }
     } catch (error) {
-      console.error("Rating error:", error);
       await fetchRatings();
       throw error;
     }

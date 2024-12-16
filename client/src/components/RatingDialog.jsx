@@ -15,7 +15,6 @@ export const RatingDialog = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("RatingDialog - Submitting with notes:", notes);
     onSubmit(rating, notes);
     setNotes("");
     onClose();

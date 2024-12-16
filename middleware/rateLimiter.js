@@ -24,10 +24,8 @@ const rateLimiterMiddleware = async (req, res, next) => {
         }
         next();
     } catch (error) {
-        console.error('Rate limiting error:', error);
         // In production, you might want to allow the request rather than fail
         if (process.env.NODE_ENV === 'production') {
-            console.warn('Rate limiter failed, allowing request');
             next();
         } else {
             next(error);

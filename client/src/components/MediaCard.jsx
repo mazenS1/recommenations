@@ -33,11 +33,9 @@ export const MediaCard = ({
   const handleRatingSubmit = async (rating, notes) => {
     if (isRating) return;
     setIsRating(true);
-    console.log("MediaCard - handleRatingSubmit:", { rating, notes });
     try {
       await onRate(rating, notes);
     } catch (error) {
-      console.error("Rating error:", error);
       toast.error("Failed to save rating");
     } finally {
       setIsRating(false);

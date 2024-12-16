@@ -83,7 +83,6 @@ const startServer = async () => {
         return new Promise((resolve, reject) => {
             const server = app.listen(port, host)
                 .once('listening', () => {
-                    console.log(`Server running on ${host}:${port}`);
                     resolve(server);
                 })
                 .once('error', (err) => {
