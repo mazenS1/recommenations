@@ -13,7 +13,6 @@ const tvController = require('./tvController');
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log('Login attempt for email:', email);
         
         const user = await User.findOne({ where: { email } });
 
@@ -40,13 +39,10 @@ const login = async (req, res) => {
             path: '/'
         };
 
-        console.log('Setting cookie with token:', token);
-        console.log('Cookie options:', cookieOptions);
+
 
         res.cookie('jwt', token, cookieOptions);
         
-        // Check if cookie was set
-        console.log('Response headers:', res.getHeaders());
 
         const userData = {
             user_id: user.user_id,
@@ -60,7 +56,6 @@ const login = async (req, res) => {
         });
         
     } catch (error) {
-        console.error('Login error:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
@@ -148,7 +143,6 @@ const rateMedia = async (req, res) => {
     const { movieId, rating, mediaType, notes } = req.body;
     const userId = req.user.userId;
 
-    console.log("Received rating request:", { movieId, rating, mediaType, userId, notes });
 
     if (!movieId || !rating || !userId || !mediaType) {
       return res.status(400).json({ 

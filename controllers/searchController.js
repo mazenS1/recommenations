@@ -20,16 +20,13 @@ const searchMulti = async (req, res) => {
         const cachedData = await redis.get(cacheKey);
         
         if (cachedData) {
-            console.log('Cache hit for search:', cacheKey);
             try {
                 const parsedData = JSON.parse(cachedData);
                 return res.status(200).json(parsedData);
             } catch (parseError) {
-                console.error('Error parsing cached data:', parseError);
             }
         }
 
-        console.log('Cache miss for search:', cacheKey, '- Fetching from TMDB API');
         const response = await fetch(
             `${TMDB_BASE_URL}/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&page=${page}`, {
                 method: 'GET',
@@ -79,16 +76,14 @@ const getTrendingMedia = async (req, res) => {
         const cachedData = await redis.get(cacheKey);
         
         if (cachedData) {
-            console.log('Cache hit for trending media');
             try {
                 const parsedData = JSON.parse(cachedData);
                 return res.status(200).json(parsedData);
             } catch (parseError) {
-                console.error('Error parsing cached data:', parseError);
+
             }
         }
 
-        console.log('Cache miss for trending media - Fetching from TMDB API');
         const response = await fetch(
             `${TMDB_BASE_URL}/trending/all/day?api_key=${TMDB_API_KEY}`, {
                 method: 'GET',
