@@ -4,7 +4,6 @@ import { MediaCard } from "../components/MediaCard";
 import { searchMulti, getTrending } from "../lib/tmdb";
 import { useRatings } from "../context/RatingsContext";
 import toast from "react-hot-toast";
-import debounce from "lodash/debounce";
 import { ErrorMessage } from "../components/ErrorMessage";
 import { useAuth } from "../context/AuthContext";
 import { AuthError } from "../lib/apiClient";
@@ -19,6 +18,8 @@ export const Home = () => {
 
   // Ref for the search input
   const searchInputRef = useRef(null);
+
+  const [searchTimeout, setSearchTimeout] = useState(null);
 
   const searchMedia = async (searchQuery) => {
     try {
@@ -51,22 +52,43 @@ export const Home = () => {
     }
   };
 
-  const debouncedSearch = useCallback(
-    debounce((query) => searchMedia(query), 300),
-    []
-  );
+  const handleSearchInput = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    
+    // Clear any existing timeout
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+
+    // Set new timeout
+    const timeoutId = setTimeout(() => {
+      searchMedia(value);
+    }, 300);
+
+    setSearchTimeout(timeoutId);
+  };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+    };
+  }, [searchTimeout]);
 
   useEffect(() => {
-    debouncedSearch(query);
-    return () => debouncedSearch.cancel();
-  }, [query, debouncedSearch]);
+    // Initial load of trending content
+    searchMedia("");
+  }, []);
 
   useEffect(() => {
     // Focus input on initial load
     if (searchInputRef.current) {
       searchInputRef.current.focus();
     }
-  }, []); // Empty dependency array means this only runs once on mount
+  }, []);
 
   const handleRate = async (media, rating, notes) => {
     try {
@@ -86,9 +108,9 @@ export const Home = () => {
               <div className="relative">
                 <input
                   type="text"
-                  ref={searchInputRef} // Attach ref to the input field
+                  ref={searchInputRef}
                   value={query}
-                  onChange={(e) => setQuery(e.target.value)}
+                  onChange={handleSearchInput}
                   placeholder="Search for movies and TV shows..."
                   className="w-full px-4 py-3 rounded-lg bg-secondary/50 border border-border text-foreground placeholder:text-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/20"
                   disabled={loading}
