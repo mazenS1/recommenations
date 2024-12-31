@@ -66,6 +66,8 @@ export const MyRatings = () => {
                 onRate={(rating, notes) =>
                   handleUpdateRating(media, rating, notes)
                 }
+                notes={media.notes}
+                showNotes={true}
               />
               <button
                 onClick={() => handleRemoveRating(media.id)}
@@ -73,13 +75,6 @@ export const MyRatings = () => {
               >
                 <Trash2 className="w-4 h-4 text-white" />
               </button>
-              {media.notes && (
-                <div className="mt-2 p-3 bg-secondary/30 rounded-md">
-                  <p className="text-sm text-primary/80 line-clamp-3">
-                    {media.notes}
-                  </p>
-                </div>
-              )}
             </div>
           ))}
         </div>

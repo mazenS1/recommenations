@@ -62,11 +62,11 @@ export const Home = () => {
   }, [query, debouncedSearch]);
 
   useEffect(() => {
-    // Refocus the input field when media changes
+    // Focus input on initial load
     if (searchInputRef.current) {
       searchInputRef.current.focus();
     }
-  }, [media]);
+  }, []); // Empty dependency array means this only runs once on mount
 
   const handleRate = async (media, rating, notes) => {
     try {

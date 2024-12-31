@@ -38,6 +38,7 @@ export const MediaDetails = () => {
   const { addRating } = useRatings();
   const [error, setError] = useState(null);
   const [userRating, setUserRating] = useState(0);
+  const [isRating, setIsRating] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -119,6 +120,8 @@ export const MediaDetails = () => {
   }, [id, mediaType]);
 
   const handleRate = async (rating) => {
+    if (isRating) return;
+    setIsRating(true);
     try {
       await addRating(
         {
@@ -134,6 +137,8 @@ export const MediaDetails = () => {
       toast.success("Rating saved successfully");
     } catch (error) {
       toast.error("Failed to save rating");
+    } finally {
+      setIsRating(false);
     }
   };
 
@@ -212,14 +217,19 @@ export const MediaDetails = () => {
                       key={value}
                       onClick={() => handleRate(value)}
                       className="focus:outline-none"
+                      disabled={isRating}
                     >
-                      <Star
-                        className={`w-4 h-4 ${
-                          value <= userRating
-                            ? "text-yellow-500 fill-yellow-500"
-                            : "text-gray-400"
-                        }`}
-                      />
+                      {isRating ? (
+                        <div className="w-4 h-4 animate-pulse bg-gray-400 rounded-full"></div>
+                      ) : (
+                        <Star
+                          className={`w-4 h-4 ${
+                            value <= userRating
+                              ? "text-yellow-500 fill-yellow-500"
+                              : "text-gray-400"
+                          }`}
+                        />
+                      )}
                     </button>
                   ))}
                 </div>

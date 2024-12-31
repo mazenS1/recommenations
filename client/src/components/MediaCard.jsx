@@ -13,6 +13,8 @@ export const MediaCard = ({
   media_type = "movie",
   onRate,
   userRating,
+  notes,
+  showNotes,
 }) => {
   const [isRating, setIsRating] = useState(false);
   const [showRatingDialog, setShowRatingDialog] = useState(false);
@@ -75,6 +77,13 @@ export const MediaCard = ({
               >
                 {userRating ? "Update Rating" : "Rate This"}
               </button>
+            </div>
+          )}
+          {showNotes && notes && (
+            <div className="mt-2 border-t border-primary/10 pt-2">
+              <p className="text-sm text-primary/80 line-clamp-2 italic">
+                "{notes}"
+              </p>
             </div>
           )}
         </div>
