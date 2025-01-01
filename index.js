@@ -75,14 +75,18 @@ app.get('*', (req, res) => {
 
 const startServer = async () => {
     try {
+        console.log('Attempting to sync database...');
         await sequelize.sync();
+        console.log('Database sync complete');
         
         const port = process.env.PORT || 3000;
         const host = '0.0.0.0';
         
+        console.log(`Attempting to start server on ${host}:${port}...`);
         return new Promise((resolve, reject) => {
             const server = app.listen(port, host)
                 .once('listening', () => {
+                    console.log(`Server is running on: http://${host}:${port}`);
                     resolve(server);
                 })
                 .once('error', (err) => {

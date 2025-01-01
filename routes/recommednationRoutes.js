@@ -1,12 +1,12 @@
 const express = require('express');
+const router = express.Router();
 const recommendationController = require('../controllers/recommendationController');
 const { authenticateToken } = require('../middleware/auth');
-
-const router = express.Router();
 
 // Protect all recommendation routes
 router.use(authenticateToken);
 
-router.get('/:id', recommendationController.getRecommendationById);
+// Only use the new similar endpoint
+router.get('/similar', recommendationController.getSimilarContentForUserFromTMDB);
 
 module.exports = router;

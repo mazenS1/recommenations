@@ -1,48 +1,72 @@
 const axios = require('axios');
 const TMDB_API_KEY = process.env.KEY;
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+const UserController = require('../controllers/userController');
+const { Op } = require('sequelize'); // Import Op for filtering
+const Rating = require('../models/Rating');
+const User = require('../models/User');
+const Movie = require('../models/Movie');
 
-const getRecommendationsFromTMDB = async (req, res) => {
+const getSimilarContentForUserFromTMDB = async (req, res) => {
+    const MAX_ITEMS_FOR_SIMILAR = 15; // Maximum number of items to fetch similar content for
+    console.log('Request received');
     try {
-        const response = await fetch(
-            `${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&sort_by=popularity.desc&page=1&vote_count.gte=1000`
-        );
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.status_message || 'Failed to fetch recommendations');
+        // get user id form the request
+        const userId = req.user.userId;
+        console.log('User ID:', userId);
+        // Check if userId is defined and not null
+        if (userId === undefined || userId === null) {
+            console.log('User ID is undefined or null');
         }
+        const ratings = await Rating.findAll({
+            where: {
+                user_id: userId,
+                rating: { [Op.gte]: 4 }
+            },
+            attributes: ['movie_id', 'media_type'],
+            include: [{
+                model: Movie,
+                attributes: ['movie_id']
+            }]
+        });
+        const shuffledRatings = ratings.sort(() => 0.5 - Math.random());
+        const limitedRatings = shuffledRatings.slice(0, MAX_ITEMS_FOR_SIMILAR);
 
-        return res.json({ results: data.results }); // Wrap in results object
+        const similarRequests = limitedRatings.map(async (rating) => {
+            const mediaType = rating.media_type;
+            const id = rating.movie_id;
+            const url = `${TMDB_BASE_URL}/${mediaType}/${id}/similar?api_key=${TMDB_API_KEY}&page=1`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                return data.results || [];
+            } catch (error) {
+                console.error(`Error fetching similar content for ${mediaType} ${id}:`, error);
+                return [];
+            }
+        });
+
+        const similarResults = await Promise.all(similarRequests);
+        
+        // Flatten results and take first 10 unique items
+        const uniqueResults = Array.from(
+            new Map(
+                similarResults.flat()
+                    .map(item => [item.id, item])
+            ).values()
+        ).slice(0, 10);
+
+        return res.json({ results: uniqueResults });
     } catch (error) {
-        return res.status(500).json({
-            message: "Failed to fetch TMDB recommendations",
+        console.error('Error fetching similar content:', error);
+        res.status(500).json({
+            message: "Failed to fetch similar content",
             error: error.message
         });
     }
 };
 
-
-
-const getRecommendationById = async (req, res) => {
-    try {
-        const { id } = req.params;
-        
-        if (!id) {
-            return res.status(400).json({ message: "User ID required" });
-        }
-
-        return await getRecommendationsFromTMDB(req, res);
-        
-    } catch (error) {
-        return res.status(500).json({ 
-            message: "Error fetching recommendations",
-            error: error.message 
-        });
-    }
-};
-
 module.exports = {
-    getRecommendationById,
-    getRecommendationsFromTMDB
+    getSimilarContentForUserFromTMDB
 };

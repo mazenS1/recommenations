@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MediaCard } from "../components/MediaCard";
-import { getRecommendations } from "../lib/tmdb";
 import { useAuth } from "../context/AuthContext";
+import { getSimilarContent } from "../lib/apiClient";
 import toast from "react-hot-toast";
 
 export const Recommendations = () => {
@@ -12,23 +12,26 @@ export const Recommendations = () => {
 
   useEffect(() => {
     const fetchRecommendations = async () => {
+      console.log('Fetching recommendations');
       if (authLoading) return;
 
-      const userId = user?.id || user?.user_id || user?._id;
-      if (!userId) {
+      if (!user) {
         toast.error("Please log in to see recommendations");
+        setLoading(false);
         return;
       }
 
       try {
-        const data = await getRecommendations(userId);
-
+        console.log('Fetching recommendations from similar endpoint');
+        const data = await getSimilarContent();
+        console.log('Received data:', data);
         if (data && Array.isArray(data.results)) {
           setRecommendations(data.results.filter((movie) => movie.poster_path));
         } else {
           setRecommendations([]);
         }
       } catch (error) {
+        console.error('Error in recommendations:', error);
         setError(error.message || "Failed to fetch recommendations");
         toast.error("Failed to fetch recommendations");
       } finally {

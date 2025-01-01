@@ -255,6 +255,43 @@ const getUserRatings = async (req, res) => {
   }
 };
 
+const { Op } = require('sequelize');
+
+const getUserHighlyRated = async (req, res) => {
+  try{
+    const userId = req.user.userId;
+    const ratings = await Rating.findAll({
+      where: {
+        user_id: userId,
+        rating: { [Op.gte]: 4 }
+      },
+      include: [{
+        model: Movie,
+        attributes: ['movie_id', 'title', 'metadata']
+      }]
+    });
+
+    const transformedRatings = ratings.map(rating => ({
+      id: rating.Movie.movie_id,
+      title: rating.Movie.title,
+      poster_path: rating.Movie.metadata?.poster_path,
+      vote_average: rating.Movie.metadata?.vote_average,
+      rating: rating.rating,
+      media_type: rating.media_type,
+      notes: rating.notes
+    }));
+
+    res.json(transformedRatings);
+  }
+  catch (error) {
+    console.error('Error fetching user ratings:', error);
+    res.status(500).json({ 
+      message: 'Failed to fetch ratings',
+      error: error.message 
+    });
+  }
+}
+
 const logout = async (req, res) => {
     try {
         res.clearCookie('jwt', {
@@ -276,5 +313,6 @@ module.exports = {
     logout,
     rateMedia,
     deleteRating,
-    getUserRatings
+    getUserRatings,
+    getUserHighlyRated
 };

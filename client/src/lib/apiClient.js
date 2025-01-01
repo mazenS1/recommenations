@@ -43,4 +43,18 @@ export const fetchWithAuth = async (url, options = {}) => {
   } catch (error) {
     throw error;
   }
-}; 
+};
+
+export const getSimilarContent = async () => {
+  console.log('Fetching similar content');
+  try {
+    const response = await fetchWithAuth('/api/v1/recommendations/similar');
+    if (!response.ok) {
+      throw new Error('Failed to fetch similar content');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching similar content:', error);
+    throw error;
+  }
+};

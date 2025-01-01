@@ -2,11 +2,11 @@
   "ignore": ["client/*", "node_modules/*"],
   "delay": "2500",
   "events": {
-    "restart": "kill-port 30010",
-    "crash": "kill-port 30010"
+    "restart": "kill-port 3000",
+    "crash": "kill-port 3000"
   },
   "env": {
     "NODE_ENV": "development",
-    "PORT": "30010"
+    "PORT": "3000"
   }
 } 

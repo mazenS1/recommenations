@@ -15,6 +15,7 @@ router.post('/login',  userController.login);
 router.post('/rate-movie', authenticateToken, userController.rateMedia);
 router.delete('/rate-movie/:movieId', authenticateToken, userController.deleteRating);
 router.get('/ratings', authenticateToken, userController.getUserRatings);
+router.get('/highly-rated', authenticateToken, userController.getUserHighlyRated);
 
 // check if user is logged in
 router.get('/check', authenticateToken, (req, res) => {

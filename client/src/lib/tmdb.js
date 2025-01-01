@@ -1,4 +1,4 @@
-import { fetchWithAuth, AuthError } from './apiClient';
+import { fetchWithAuth, AuthError, getSimilarContent } from './apiClient';
 import { toast } from 'react-hot-toast';
 import { API_BASE_URL } from '../config';
 
@@ -103,43 +103,6 @@ export const getDetails = async (id, type) => {
   });
   
   return data;
-};
-
-export const getRecommendations = async (userId) => {
-  const cacheKey = `recommendations-${userId}`;
-  const cached = cache.recommendations.get(cacheKey);
-  
-  if (cached && Date.now() - cached.timestamp < CACHE_EXPIRY) {
-    return cached.data;
-  }
-  
-  const response = await fetchWithRetry(
-    `${API_BASE_URL}/recommendations/${userId}`,
-    {
-      credentials: 'include',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    }
-  );
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || 'Failed to fetch recommendations');
-  }
-
-  const data = await response.json();
-  
-  // Ensure data has a results property
-  const formattedData = data.results ? data : { results: [] };
-  
-  cache.recommendations.set(cacheKey, {
-    timestamp: Date.now(),
-    data: formattedData
-  });
-  
-  return formattedData;
 };
 
 export const getMovieDetails = async (movieId) => {
