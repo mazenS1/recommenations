@@ -45,14 +45,39 @@ export const fetchWithAuth = async (url, options = {}) => {
   }
 };
 
+// Cache configuration
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+let similarContentCache = {
+  data: null,
+  timestamp: null
+};
+
 export const getSimilarContent = async () => {
+  console.log('Checking cache for similar content');
+  
+  // Check if cache is valid
+  const now = Date.now();
+  if (similarContentCache.data && similarContentCache.timestamp && 
+      (now - similarContentCache.timestamp < CACHE_DURATION)) {
+    console.log('Returning cached similar content');
+    return similarContentCache.data;
+  }
+
   console.log('Fetching similar content');
   try {
     const response = await fetchWithAuth('/api/v1/recommendations/similar');
     if (!response.ok) {
       throw new Error('Failed to fetch similar content');
     }
-    return response.json();
+    const data = await response.json();
+    
+    // Update cache
+    similarContentCache = {
+      data,
+      timestamp: Date.now()
+    };
+    
+    return data;
   } catch (error) {
     console.error('Error fetching similar content:', error);
     throw error;
