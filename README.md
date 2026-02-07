@@ -147,4 +147,3 @@ The application is configured for deployment on:
 
 ## License
 
-ISC
